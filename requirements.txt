@@ -1,0 +1,16 @@
+fastapi
+gunicorn
+pydantic
+uvicorn
+uvloop
+httptools
+motor
+
+# NewsAnalysis
+nltk
+newspaper3k
+textblob
+requests
+## Audio
+pypdf2
+pyttsx3
