@@ -5,6 +5,7 @@ from utils.article import newsContent
 from utils.authentication import email
 from utils.exception import UnknownDBError
 from model import *
+from typing import Union
 
 router = APIRouter()
 
@@ -106,12 +107,15 @@ async def insert(news: News):
         return Response(code=500, status="Internal Server Error", message=UnknownDBError.__str__).dict(exclude_none=True)
 
 @router.post("/api/news/edit/{id}")
-async def update(id:str, var:str, value:str):
+async def update(id:str, var:str, value:str, link: Union[str, None] = None):
     try:
         # await newsContent()
-        res = await NewsRepo.update(id, var, value)
+        if link != None:
+            res = await NewsRepo.update(id, var, value, link=link)
+        else:
+            res = await NewsRepo.update(id, var, value)
         return Response(code=200, status="Ok", message="Success edited data", result=res).dict(exclude_none=True)
-    except UnknownDBError: 
+    except UnknownDBError:
         return Response(code=500, status="Internal Server Error", message=UnknownDBError.__str__).dict(exclude_none=True)
 
 @router.delete("/api/news/delete/{id}")

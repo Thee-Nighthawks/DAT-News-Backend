@@ -3,6 +3,7 @@ from model import News, NewsType
 from utils.exception import UnknownDBError
 from config import *
 from datetime import datetime
+from typing import Optional
 
 class NewsRepo():
     @staticmethod
@@ -38,20 +39,39 @@ class NewsRepo():
             return {
                 'successful': 'true'
             }
-        except:
+        except Exception:
             return {
                 'successful': 'false'
             }
 
     @staticmethod
-    async def update(id: str, typeOf: str, value: str):
-        ob = {typeOf: value}
+    async def update(id: str, typeOf: str, value: str, **kwargs):
+        ob = {}
+        # ob[typeOf] = value
         try:
-            await database.get_collection(NEWS_COL_NAME).update_one({"_id": ObjectId(id)}, {"$set": {ob}})   
+            for key, vale in kwargs.items():
+                if key == "link":
+                    link = vale
+            if (typeOf == "author"):
+                rt = database[NEWS_DB_NAME].get_collection(NEWS_COL_NAME).aggregate([{ '$match': { '_id': ObjectId(id) } }])  
+                arr = [] if [rt['author'] async for rt in rt] == [None] else [rt['author'] async for rt in rt]
+                arr.append({value: link})
+                ob[typeOf] = arr
+                print(ob)
+            elif (typeOf == "comment"):
+                rt = database[NEWS_DB_NAME].get_collection(NEWS_COL_NAME).aggregate([{ '$match': { '_id': ObjectId(id) } }])  
+                arr = [] if [rt['comment'] async for rt in rt] == [None] else [rt['comment'] async for rt in rt]
+                arr.append({value: link})
+                ob[typeOf] = arr
+                print(ob)
+            else:
+                ob[typeOf] = value
+            await database[NEWS_DB_NAME].get_collection(NEWS_COL_NAME).update_one({"_id": ObjectId(id)}, {"$set": ob})   
             return {
                 'successful': 'true'
             }     
-        except: 
+        except Exception as e: 
+            print(e)
             return {
                 'successful': 'false'
             }
@@ -62,19 +82,26 @@ class NewsRepo():
 
     @staticmethod
     async def fetch(id: str):
-        res = {}
         agg = [{ '$match': { '_id': ObjectId(id) } }]
         try:
-            lis = database[NEWS_DB_NAME][NEWS_COL_NAME].aggregate(agg)
-        except:
-            raise UnknownDBError("find")
-        async for do in lis:
-            try:
-                res = do
-                res['successful'] = 'true'
-            except Exception:
-                res['successful'] = 'false'
-        return res
+            lis = database[NEWS_DB_NAME].get_collection(NEWS_COL_NAME).aggregate(agg)
+        except Exception as e:
+            print(e)
+        try:
+            async for do in lis:
+                res = {}
+                res['nele'] = do['nele']
+                res['title'] = do['title']
+                res['date'] = do['date']
+                res['author'] = do['author']
+                res['body'] = do['body']
+                res['audio'] = do['audio']
+                res['link'] = do['link']
+                res['comment'] = do['comment']
+                res['sentiment'] = do['sentiment']
+            return {'successful': 'true', 'detail': res}
+        except Exception:
+            return {'successful': 'false'}
     
     @staticmethod
     async def fetchAll():
