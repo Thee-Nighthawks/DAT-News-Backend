@@ -9,6 +9,7 @@
 ### Windows
 
 ```sh
+git clone https://github.com/Thee-Nighthawks/DAT-News-Backend
 cd DAT-News-Backend
 pip install -r requirements.txt
 uvicorn main:app --reload

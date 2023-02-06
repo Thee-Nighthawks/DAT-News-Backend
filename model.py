@@ -10,6 +10,7 @@ class Register(BaseModel):
     name: str
     age: int
     gender: int
+    admin: Optional[int] = 0
 
 class Login(BaseModel):
     mail: str

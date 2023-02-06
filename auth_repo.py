@@ -15,6 +15,7 @@ class Auth():
             'name': register.name,
             'age': register.age,
             'gender': register.gender,
+            'admin': register.admin,
             'verified': 'false'
         }
         try:

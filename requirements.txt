@@ -8,7 +8,6 @@ motor
 
 # Auth
 elementpath
-smtplib
 email-to
 
 # NewsAnalysis
