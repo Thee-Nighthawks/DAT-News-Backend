@@ -6,11 +6,16 @@ uvloop
 httptools
 motor
 
+# Auth
+elementpath
+smtplib
+email-to
+
 # NewsAnalysis
 nltk
 newspaper3k
 textblob
 requests
 ## Audio
-pypdf2
-pyttsx3
+# pypdf2
+# pyttsx3

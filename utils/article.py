@@ -1,6 +1,5 @@
 # import asyncio
 import requests
-import nltk
 # import pyttsx3
 from newspaper import Article
 from textblob import TextBlob

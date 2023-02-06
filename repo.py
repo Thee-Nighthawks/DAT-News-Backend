@@ -1,9 +1,8 @@
 from bson import ObjectId
 from model import News, NewsType
-from utils.exception import UnknownDBError
+# from utils.exception import UnknownDBError
 from config import *
 from datetime import datetime
-from typing import Optional
 
 class NewsRepo():
     @staticmethod
@@ -67,14 +66,10 @@ class NewsRepo():
             else:
                 ob[typeOf] = value
             await database[NEWS_DB_NAME].get_collection(NEWS_COL_NAME).update_one({"_id": ObjectId(id)}, {"$set": ob})   
-            return {
-                'successful': 'true'
-            }     
+            return { 'successful': 'true' }     
         except Exception as e: 
             print(e)
-            return {
-                'successful': 'false'
-            }
+            return { 'successful': 'false'}
 
     # @staticmethod
     # async def newspaperAlign(id: str):
