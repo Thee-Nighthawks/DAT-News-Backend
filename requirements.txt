@@ -9,6 +9,7 @@ motor
 # Auth
 elementpath
 email-to
+hashlib
 
 # NewsAnalysis
 nltk
